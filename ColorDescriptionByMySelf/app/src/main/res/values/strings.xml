@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ColorDescriptionByMySelf</string>
+    <string name="buttonDescriptionColort">Color Description\n</string>
+
+
+    <string-array name="color">
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Blue</item>
+    </string-array>
+
+    <string-array name="description_of_temp">
+        <item>Red - A strong color that shows energy, passion, or danger.</item>
+        <item>Orange - A warm and friendly color, often linked to creativity and fun.</item>
+        <item>Yellow - A bright color that represents happiness, attention, and optimism.</item>
+        <item>Green - A calm color connected to nature, growth, and health.</item>
+        <item>Blue - A cool and peaceful color that means trust, stability, and calm.</item>
+    </string-array>
+</resources>

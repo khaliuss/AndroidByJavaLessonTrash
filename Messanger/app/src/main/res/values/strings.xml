@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Massanger</string>
+    <string name="buttonSend">Send\n</string>
+    <string name="hintEnterMessage">Введите Текст\n</string>
+</resources>

@@ -22,10 +22,12 @@ public class CreateMessageActivity extends AppCompatActivity {
 
     public void onClickSendMessage(View view) {
         String mes = editTextMessage.getText().toString();
-        Intent intent = new Intent(this, ReceiveMessageActivity.class);
-        intent.putExtra("Message",mes);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT,mes);
+        Intent chosenIntent = Intent.createChooser(intent,getString(R.string.chooserTitle));
 
-        startActivity(intent);
+        startActivity(chosenIntent);
 
     }
 }

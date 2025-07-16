@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Cafee MyVeryFirstApplication</string>
+
+    <string name="logo_description">Coffee Logo </string>
+    <string name="welcome">Welcome</string>
+    <string name="hint_name">Input here your name</string>
+    <string name="hint_password">Input here your password</string>
+    <string name="button_create_order">Order</string>
+    <string name="waringMessage">You should fill fields\n</string>
+    <string name="tea">Tea</string>
+    <string name="coffee">Coffee</string>
+    <string name="greetingTextDefault">Привет клиент что желаете</string>
+    <string name="milk">Milk</string>
+    <string name="sugar">Sugar</string>
+    <string name="lemon">Lemon</string>
+    <string name="additionTo">What add to you Tea</string>
+    <string name="kind_of_drinks">Choose kind of drinks</string>
+    <string name="greetingTextName">Привет %s что желаете?</string>
+    <string name="defaultPasword">Some Default Password</string>
+
+
+    <string-array name="spinnerCoffeeOption">
+        <item>Espresso</item>
+        <item>Americano</item>
+        <item>Cappuccino</item>
+    </string-array>
+
+    <string-array name="spinnerTeaOption">
+        <item>Black</item>
+        <item>Green</item>
+        <item>Red</item>
+    </string-array>
+
+</resources>

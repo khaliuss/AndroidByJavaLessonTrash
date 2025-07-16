@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Tools Shop</string>
+    <string name="makita_title">Makita</string>
+    <string name="makita_description">Makita Drill – a high-quality, durable power tool known for its performance and reliability. Makita drills are commonly used for drilling and screwdriving in wood, metal, and masonry. They feature ergonomic design, strong batteries (for cordless models), and variable speed control, making them ideal for both professionals and DIY users.</string>
+    <string name="interskol_description">Interskol Drill – a budget-friendly, reliable power tool made in Russia. Interskol drills are suitable for household and semi-professional tasks like drilling and screwdriving in wood, metal, and plastic. They are known for their simple design, decent power, and good value for money.</string>
+    <string name="interskol_title">Interskol</string>
+    <string name="dewalt_title">Dewalt</string>
+    <string name="dewalt_description">DeWalt Drill – a premium, high-performance power tool favored by professionals. DeWalt drills are known for their power, durability, and advanced features like brushless motors, long-lasting batteries (in cordless models), and ergonomic design. Ideal for heavy-duty tasks in construction, woodworking, and metalworking.</string>
+    <string name="defaultTitle">Drill Title\n</string>
+
+    <string-array name="lis_view_items">
+        <item>Drill</item>
+        <item>Rotary hammer</item>
+        <item>Angle grinder</item>
+    </string-array>
+</resources>

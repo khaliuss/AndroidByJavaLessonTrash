@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NewCalculator</string>
+    <string name="right">Right</string>
+    <string name="wrong">Wrong</string>
+</resources>

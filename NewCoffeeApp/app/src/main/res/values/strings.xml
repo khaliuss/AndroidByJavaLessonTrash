@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">NewCoffeeApp</string>
+    <string name="passwordHint">Пароль</string>
+    <string name="nameHint">Имя</string>
+    <string name="enterButtonText">Войти</string>
+    <string name="welcomeText">Добро пожаловать!</string>
+    <string name="RBTeaText">Чай</string>
+    <string name="RBCoffeeText">Кофе</string>
+    <string name="btOrderText">Сделать заказ</string>
+    <string name="tvChooseTypeOfDrink">Выберите тип напитка.</string>
+    <string name="chLemon">Лимон</string>
+    <string name="chMilk">Молоко</string>
+    <string name="chSugar">Сахар</string>
+    <string name="defaultAdditionTV">Что добавить в ваш чай?</string>
+    <string name="defaultWelcomeTV">Привет Клиент, что желаете.</string>
+    <string name="fillDataToastWarning">Заполните данные</string>
+    <string name="dynamicWelcomeText">Привет %s, что желаете?</string>
+    <string name="dynamicAdditionTV">Что добавить в ваш %s</string>
+    <string name="Name">Имя:</string>
+
+    <string-array name="teaSpinnerText">
+        <item>Черный</item>
+        <item>Зеленый</item>
+    </string-array>
+
+    <string-array name="coffeeSpinnerText">
+        <item>Капучино</item>
+        <item>Латте</item>
+        <item>Эспрессо</item>
+    </string-array>
+</resources>

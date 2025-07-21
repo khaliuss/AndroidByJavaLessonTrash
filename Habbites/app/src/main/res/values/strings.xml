@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Habbites</string>
+    <string name="bads">BADS</string>
+    <string name="goods">GOODS</string>
+    <string name="badsCount">0</string>
+    <string name="goodsCount">0</string>
+</resources>

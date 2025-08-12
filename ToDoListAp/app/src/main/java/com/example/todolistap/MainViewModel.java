@@ -8,10 +8,14 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Action;
@@ -36,8 +40,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void refreshList() {
         Disposable disposable =
-                notesDataBase.notesDao()
-                        .getNotes()
+                getNotesRX()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<List<Note>>() {
@@ -49,20 +52,36 @@ public class MainViewModel extends AndroidViewModel {
         compositeDisposable.add(disposable);
     }
 
+    public Single<List<Note>> getNotesRX() {
+        return Single.fromCallable(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() throws Exception {
+                return notesDataBase.notesDao().getNotes();
+            }
+        });
+    }
+
 
     public void remove(Note note) {
-        Disposable disposable = notesDataBase
-                .notesDao()
-                .remove(note.getId())
+        Disposable disposable = removeRx(note)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Throwable {
-                       refreshList();
+                        refreshList();
                     }
                 });
         compositeDisposable.add(disposable);
+    }
+
+    public Completable removeRx(Note note){
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Throwable {
+                notesDataBase.notesDao().remove(note.getId());
+            }
+        });
     }
 
     @Override

@@ -27,6 +27,14 @@ public class MainActivity extends AppCompatActivity {
         initView();
         recyclerView.setAdapter(recyclerViewAdapter);
 
+        recyclerViewAdapter.setOnNoteClickListener(new NotesAdapter.OnNoteClickListener() {
+            @Override
+            public void onClickListener(Note note) {
+                dataBase.remove(note.getId());
+                showNotes();
+            }
+        });
+
         addFAButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

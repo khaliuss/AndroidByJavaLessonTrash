@@ -1,6 +1,6 @@
 package com.example.todolistap;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,14 +11,12 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton addFAButton;
     private LinearLayout linearLayout;
-    private ArrayList<Data> dataArrayList;
+
+    private DataBase dataBase = DataBase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,24 +24,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
 
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            dataArrayList.add(new Data(i,random.nextInt(3),("String "+i)));
-        }
-
-        showItems();
+        addFAButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = AddNewTaskActivity.newIntent(getApplicationContext());
+                startActivity(intent);
+            }
+        });
 
     }
 
-    private void showItems() {
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        for (Data data:dataArrayList) {
-            View view = getLayoutInflater().inflate(R.layout.to_do_item,linearLayout,false);
+        showNotes();
+    }
+
+    private void showNotes() {
+        linearLayout.removeAllViews();
+        for (Note note:dataBase.getNotes()) {
+            View view = getLayoutInflater().inflate(
+                    R.layout.to_do_item,
+                    linearLayout,
+                    false);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dataBase.remove(note.getId());
+                    showNotes();
+                }
+            });
 
             TextView textView= view.findViewById(R.id.task_text);
-            textView.setText(data.getText());
+            textView.setText(note.getText());
             int colorRes;
-            switch (data.getPriority()){
+            switch (note.getPriority()){
                 case 0:
                     colorRes = android.R.color.holo_green_dark;
                     break;
@@ -63,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         addFAButton = findViewById(R.id.addFAButton);
         linearLayout = findViewById(R.id.linearContainer);
-        dataArrayList = new ArrayList<>();
     }
 
 

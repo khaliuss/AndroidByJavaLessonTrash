@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ToDoListAp</string>
+    <string name="rbLowTx">Низкий</string>
+    <string name="rbMediumTx">Средний</string>
+    <string name="rbHighTx">Высокий</string>
+    <string name="saveTx">Сохранить</string>
+    <string name="edHintTx">Напишите заметку</string>
 </resources>

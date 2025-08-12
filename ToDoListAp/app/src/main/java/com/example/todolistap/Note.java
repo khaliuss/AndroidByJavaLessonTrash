@@ -1,12 +1,12 @@
 package com.example.todolistap;
 
-public class Data {
+public class Note {
 
     private int id;
     private int priority;
     private String text;
 
-    public Data(int id, int priority, String text) {
+    public Note(int id, int priority, String text) {
         this.id = id;
         this.priority = priority;
         this.text = text;

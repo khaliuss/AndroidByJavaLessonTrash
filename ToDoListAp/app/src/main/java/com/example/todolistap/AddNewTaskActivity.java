@@ -3,6 +3,8 @@ package com.example.todolistap;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private Button saveBt;
 
     private NotesDataBase notesDataBase;
+
+    private Handler handler = new Handler(Looper.getMainLooper());
 
 
 
@@ -45,9 +49,21 @@ public class AddNewTaskActivity extends AppCompatActivity {
         String text = editTextTask.getText().toString().trim();
         int priority = getPriority();
         Note note = new Note(priority,text);
-        notesDataBase.notesDao().add(note);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                notesDataBase.notesDao().add(note);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
 
-        finish();
+                    }
+                });
+            }
+        });
+        thread.start();
+
     }
 
     private int getPriority(){

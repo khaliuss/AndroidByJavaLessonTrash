@@ -2,6 +2,8 @@ package com.example.todolistap;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,10 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private NotesAdapter recyclerViewAdapter;
 
     private NotesDataBase notesDataBase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +67,33 @@ public class MainActivity extends AppCompatActivity {
                     {
                         int position = viewHolder.getAdapterPosition();
                         Note note = recyclerViewAdapter.getNotes().get(position);
-                        notesDataBase.notesDao().remove(note.getId());
-                        showNotes();
+
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notesDataBase.notesDao().remove(note.getId());
+                            }
+                        });
+                        thread.start();
+
+
+
                     }
                 });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        notesDataBase.notesDao().getNotes().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                recyclerViewAdapter.setNotes(notes);
+            }
+        });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showNotes();
-    }
 
-    private void showNotes() {
-        recyclerViewAdapter.setNotes(notesDataBase.notesDao().getNotes());
-    }
+
+
 
     private void initView() {
         addFAButton = findViewById(R.id.addFAButton);

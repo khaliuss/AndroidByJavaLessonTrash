@@ -20,13 +20,14 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private NotesAdapter recyclerViewAdapter;
 
-    private DataBase dataBase = DataBase.getInstance();
+    private NotesDataBase notesDataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        notesDataBase = NotesDataBase.getInstance(getApplication());
         recyclerView.setAdapter(recyclerViewAdapter);
 
         recyclerViewAdapter.setOnNoteClickListener(new NotesAdapter.OnNoteClickListener() {
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         int position = viewHolder.getAdapterPosition();
                         Note note = recyclerViewAdapter.getNotes().get(position);
-                        dataBase.remove(note.getId());
+                        notesDataBase.notesDao().remove(note.getId());
                         showNotes();
                     }
                 });
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotes() {
-        recyclerViewAdapter.setNotes(dataBase.getNotes());
+        recyclerViewAdapter.setNotes(notesDataBase.notesDao().getNotes());
     }
 
     private void initView() {

@@ -22,7 +22,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private RadioButton rbMedium;
     private Button saveBt;
 
-    private DataBase dataBase = DataBase.getInstance();
+    private NotesDataBase notesDataBase;
 
 
 
@@ -42,14 +42,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
     }
 
     private void saveNote() {
-        int id = 0;
-        if (!dataBase.getNotes().isEmpty()){
-            id++;
-        }
         String text = editTextTask.getText().toString().trim();
         int priority = getPriority();
-        Note note = new Note(id,priority,text);
-        dataBase.add(note);
+        Note note = new Note(priority,text);
+        notesDataBase.notesDao().add(note);
 
         finish();
     }
@@ -67,7 +63,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-
+        notesDataBase = NotesDataBase.getInstance(getApplication());
         editTextTask = findViewById(R.id.editTextTask);
         rbLow = findViewById(R.id.rbLow);
         rbMedium = findViewById(R.id.rbMedium);

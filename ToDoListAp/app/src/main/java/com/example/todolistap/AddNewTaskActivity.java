@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 public class AddNewTaskActivity extends AppCompatActivity {
 
@@ -24,9 +26,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private RadioButton rbMedium;
     private Button saveBt;
 
-    private NotesDataBase notesDataBase;
-
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private AddNewTaskViewModel addViewModel;
 
 
 
@@ -34,6 +34,15 @@ public class AddNewTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
+        addViewModel = new ViewModelProvider(this).get(AddNewTaskViewModel.class);
+
+        addViewModel.getShouldClose().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                finish();
+            }
+        });
+
         initViews();
 
         saveBt.setOnClickListener(new View.OnClickListener() {
@@ -49,21 +58,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         String text = editTextTask.getText().toString().trim();
         int priority = getPriority();
         Note note = new Note(priority,text);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                notesDataBase.notesDao().add(note);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-
-                    }
-                });
-            }
-        });
-        thread.start();
-
+        addViewModel.add(note);
     }
 
     private int getPriority(){
@@ -79,7 +74,6 @@ public class AddNewTaskActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        notesDataBase = NotesDataBase.getInstance(getApplication());
         editTextTask = findViewById(R.id.editTextTask);
         rbLow = findViewById(R.id.rbLow);
         rbMedium = findViewById(R.id.rbMedium);

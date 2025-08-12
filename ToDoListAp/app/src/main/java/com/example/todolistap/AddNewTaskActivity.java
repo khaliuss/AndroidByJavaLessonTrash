@@ -58,7 +58,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         String text = editTextTask.getText().toString().trim();
         int priority = getPriority();
         Note note = new Note(priority,text);
-        addViewModel.add(note);
+        addViewModel.saveNote(note);
     }
 
     private int getPriority(){

@@ -15,6 +15,12 @@ public class DataBase {
         return instance;
     }
 
+    public DataBase(){
+        Random priority = new Random();
+        for (int i=0;notes.size()<20;i++){
+            notes.add(new Note(i,priority.nextInt(3),"Note "+i));
+        }
+    }
 
     public void add(Note note){
         notes.add(note);

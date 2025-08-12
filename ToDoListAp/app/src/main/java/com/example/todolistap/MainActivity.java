@@ -26,15 +26,16 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private NotesAdapter recyclerViewAdapter;
 
-    private NotesDataBase notesDataBase;
+
+    private MainViewModel mainViewModel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainViewModel = new MainViewModel(getApplication());
         initView();
-        notesDataBase = NotesDataBase.getInstance(getApplication());
         recyclerView.setAdapter(recyclerViewAdapter);
 
         recyclerViewAdapter.setOnNoteClickListener(new NotesAdapter.OnNoteClickListener() {
@@ -67,23 +68,13 @@ public class MainActivity extends AppCompatActivity {
                     {
                         int position = viewHolder.getAdapterPosition();
                         Note note = recyclerViewAdapter.getNotes().get(position);
-
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                notesDataBase.notesDao().remove(note.getId());
-                            }
-                        });
-                        thread.start();
-
-
-
+                        mainViewModel.remove(note);
                     }
                 });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        notesDataBase.notesDao().getNotes().observe(this, new Observer<List<Note>>() {
+        mainViewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
                 recyclerViewAdapter.setNotes(notes);

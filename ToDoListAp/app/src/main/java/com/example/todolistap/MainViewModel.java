@@ -1,6 +1,7 @@
 package com.example.todolistap;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +27,6 @@ public class MainViewModel extends AndroidViewModel {
 
     private NotesDataBase notesDataBase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MutableLiveData<List<Note>> notes = new MutableLiveData<>();
 
 
     public MainViewModel(@NonNull Application application) {
@@ -35,53 +35,27 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Note>> getNotes() {
-        return notes;
+        return notesDataBase.notesDao().getNotes();
     }
 
-    public void refreshList() {
-        Disposable disposable =
-                getNotesRX()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<List<Note>>() {
-                            @Override
-                            public void accept(List<Note> notesFromDb) throws Throwable {
-                                notes.setValue(notesFromDb);
-                            }
-                        });
-        compositeDisposable.add(disposable);
-    }
-
-    public Single<List<Note>> getNotesRX() {
-        return Single.fromCallable(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() throws Exception {
-                return notesDataBase.notesDao().getNotes();
-            }
-        });
-    }
 
 
     public void remove(Note note) {
-        Disposable disposable = removeRx(note)
+        Disposable disposable = notesDataBase.notesDao().remove(note.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Throwable {
-                        refreshList();
+                        Log.i("Log", "Removed: " + note.getId());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.i("Log","Exception in remove");
                     }
                 });
         compositeDisposable.add(disposable);
-    }
-
-    public Completable removeRx(Note note){
-        return Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Throwable {
-                notesDataBase.notesDao().remove(note.getId());
-            }
-        });
     }
 
     @Override

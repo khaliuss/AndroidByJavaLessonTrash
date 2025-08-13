@@ -2,6 +2,7 @@ package com.example.todolistap;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -16,6 +17,7 @@ import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AddNewTaskViewModel extends AndroidViewModel {
@@ -36,7 +38,7 @@ public class AddNewTaskViewModel extends AndroidViewModel {
 
 
     public void saveNote(Note note) {
-        Disposable disposable = addRx(note)
+        Disposable disposable = notesDao.add(note)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
@@ -44,18 +46,16 @@ public class AddNewTaskViewModel extends AndroidViewModel {
                     public void run() throws Throwable {
                         shouldClose.setValue(true);
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.i("Log","Exception in save");
+                    }
                 });
         compositeDisposable.add(disposable);
     }
 
-    public Completable addRx(Note note){
-        return Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Throwable {
-                notesDao.add(note);
-            }
-        });
-    }
+
 
     @Override
     protected void onCleared() {

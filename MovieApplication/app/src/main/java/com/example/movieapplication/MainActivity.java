@@ -13,6 +13,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -25,23 +27,42 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView name;
-    ProgressBar progressBar;
 
     MainViewModel mainViewModel;
+    RecyclerView recyclerView;
+
+    MoviesAdapter moviesAdapter;
+
+    ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        name = findViewById(R.id.name);
-        progressBar = findViewById(R.id.progressBar);
+        recyclerView = findViewById(R.id.recyclerViewMovies);
+        progressBar = findViewById(R.id.progressBarLoading);
+        moviesAdapter = new MoviesAdapter();
+        recyclerView.setAdapter(moviesAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mainViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
-                Log.d("Main",movies.toString());
+                moviesAdapter.setMovies(movies);
+            }
+        });
+
+        mainViewModel.getIsLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                if (isLoading){
+                    progressBar.setVisibility(View.VISIBLE);
+                }else{
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
 

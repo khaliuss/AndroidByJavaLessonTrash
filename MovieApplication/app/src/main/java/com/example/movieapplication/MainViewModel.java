@@ -1,6 +1,7 @@
 package com.example.movieapplication;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
@@ -9,6 +10,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -28,6 +30,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public MainViewModel(@NonNull Application application) {
         super(application);
+        loadMovies();
     }
 
     LiveData<List<Movie>> getMovies(){
@@ -39,7 +42,11 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     void loadMovies(){
-        Disposable disposable = ApiFactory.apiservice.loadMovies(1)
+        Boolean loading  = isLoading.getValue();
+        if (loading != null && loading){
+            return;
+        }
+        Disposable disposable = ApiFactory.apiservice.loadMovies(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -57,8 +64,14 @@ public class MainViewModel extends AndroidViewModel {
                 .subscribe(new Consumer<MovieResponse>() {
                     @Override
                     public void accept(MovieResponse movieResponse) throws Throwable {
+                        List<Movie> loadedMovies = mldMovies.getValue();
+                        if (loadedMovies != null){
+                            loadedMovies.addAll(movieResponse.getMovies());
+                            mldMovies.setValue(loadedMovies);
+                        }else{
+                            mldMovies.setValue(movieResponse.getMovies());
+                        }
                         page++;
-                        mldMovies.setValue(movieResponse.getMovies());
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -69,6 +82,7 @@ public class MainViewModel extends AndroidViewModel {
         compositeDisposable.add(disposable);
     }
 
+    
 
 
 

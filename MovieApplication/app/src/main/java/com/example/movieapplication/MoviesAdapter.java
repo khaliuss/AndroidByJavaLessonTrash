@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -18,6 +19,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
 
     private List<Movie> movies = new ArrayList<Movie>();
+    private OnReachEndOfList onReachEndOfList;
+    private OnMovieClick onMovieClick;
+
+    public void setOnMovieClick(OnMovieClick onMovieClick) {
+        this.onMovieClick = onMovieClick;
+    }
+
+    public void setOnReachEndOfList(OnReachEndOfList onReachEndOfList) {
+        this.onReachEndOfList = onReachEndOfList;
+    }
+
+
+
     public void setMovies(List<Movie> movies){
         this.movies = movies;
         notifyDataSetChanged();
@@ -43,7 +57,40 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 .load(movie.getPoster().getUrl())
                 .into(holder.imageViewPoster);
 
-        holder.textViewRating.setText(movie.getRating().getRatingKp());
+        double ratingKp = movie.getRating().getRatingKp();
+
+        int backgroundId;
+
+        if (ratingKp>7){
+            backgroundId = R.drawable.circle_green;
+        }else if (ratingKp > 5){
+            backgroundId = R.drawable.circle_orange;
+        }else {
+            backgroundId = R.drawable.circle_red;
+        }
+
+        holder.textViewRating.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),backgroundId));
+
+        holder.textViewRating.setText(String.format("%.1f", movie.getRating().getRatingKp()));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMovieClick.onClick(position);
+            }
+        });
+
+        if (position == movies.size() - 10 && onReachEndOfList != null){
+            onReachEndOfList.onReach();
+        }
+    }
+
+    interface OnReachEndOfList{
+        void onReach();
+    }
+
+    interface OnMovieClick{
+        void onClick(int position);
     }
 
     @Override

@@ -11,6 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_MOVIE = "EXTRA_MOVIE";
@@ -37,9 +42,24 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .into(imageViewPoster);
 
             textViewTitle.setText(movie.getName());
-            textViewYear.setText(String.valueOf(movie.getYear()));
+            textViewYear.setText(String.valueOf(movie.getId()));
             textViewDetails.setText(movie.getDescription());
         }
+
+        ApiFactory.apiservice.loadTrailers(movie.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<TrailerRespons>() {
+                    @Override
+                    public void accept(TrailerRespons trailerRespons) throws Throwable {
+                        Log.d("DEtail", trailerRespons.trailerList.getTrailers().get(0).toString());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.d("DEtail", throwable.toString());
+                    }
+                });
 
 
     }

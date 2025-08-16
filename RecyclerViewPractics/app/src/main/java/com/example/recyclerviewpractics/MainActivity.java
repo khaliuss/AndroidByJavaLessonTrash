@@ -11,25 +11,25 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private MyRecyclerViewAdapter recyclerViewAdapter;
-    private List<String> strings;
+    RecyclerView recyclerView;
+    MyRecyclerViewAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        List<String> strings = new ArrayList<>();
 
-        strings = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            strings.add("String "+i);
+        for (int i = 0; i < 20; i++) {
+            strings.add("Some "+i);
         }
-        recyclerViewAdapter = new MyRecyclerViewAdapter();
 
         recyclerView = findViewById(R.id.recyclerView);
+        myAdapter = new MyRecyclerViewAdapter(strings);
+
+        recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerViewAdapter.setTextList(strings);
+
 
 
     }

@@ -4,54 +4,47 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyHolder> {
 
-    private List<String> textList = new ArrayList<>();
+    private List<String> strings;
 
-    public void setTextList(List<String> textList) {
-        this.textList = textList;
-        notifyDataSetChanged();
+    public MyRecyclerViewAdapter(List<String> strings) {
+        this.strings = strings;
     }
 
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.recycler_view_item,
+                        parent,
+                        false);
+
         return new MyHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        holder.textView.setText(textList.get(position));
-        holder.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(holder.itemView.getContext(),"Position: "+position,Toast.LENGTH_SHORT).show();
-            }
-        });
+        holder.textView.setText(strings.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return textList.size();
+        return strings.size();
     }
 
-    class MyHolder extends RecyclerView.ViewHolder{
+    public class MyHolder extends RecyclerView.ViewHolder {
 
-        TextView textView;
+        private TextView textView;
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.itemTextView);
         }
     }
 }
-
-

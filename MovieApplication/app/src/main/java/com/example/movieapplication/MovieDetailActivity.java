@@ -8,11 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -24,16 +27,20 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView textViewYear;
     private TextView textViewDetails;
 
+    private RecyclerView recyclerView;
+    private TrailersAdapter adapter;
+
+    private  MovieDetailViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        init();
 
-        imageViewPoster = findViewById(R.id.imageViewPosterDetail);
-        textViewTitle = findViewById(R.id.textViewTitle);
-        textViewYear = findViewById(R.id.textViewYear);
-        textViewDetails = findViewById(R.id.textViewDetail);
+        recyclerView.setAdapter(adapter);
+
         Movie movie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
 
         if (movie != null) {
@@ -42,25 +49,29 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .into(imageViewPoster);
 
             textViewTitle.setText(movie.getName());
-            textViewYear.setText(String.valueOf(movie.getId()));
+            textViewYear.setText(String.valueOf(movie.getYear()));
             textViewDetails.setText(movie.getDescription());
         }
 
-        ApiFactory.apiservice.loadTrailers(movie.getId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<TrailerRespons>() {
-                    @Override
-                    public void accept(TrailerRespons trailerRespons) throws Throwable {
-                        Log.d("DEtail", trailerRespons.trailerList.getTrailers().get(0).toString());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Throwable {
-                        Log.d("DEtail", throwable.toString());
-                    }
-                });
 
+        viewModel.loadTrailers(movie.getId());
+        viewModel.getTrailers().observe(this, new Observer<List<Trailer>>() {
+            @Override
+            public void onChanged(List<Trailer> trailers) {
+                adapter.setTrailers(trailers);
+            }
+        });
+
+    }
+
+    private void init (){
+        imageViewPoster = findViewById(R.id.imageViewPosterDetail);
+        textViewTitle = findViewById(R.id.textViewTitle);
+        textViewYear = findViewById(R.id.textViewYear);
+        textViewDetails = findViewById(R.id.textViewDetail);
+        viewModel = new MovieDetailViewModel(getApplication());
+        recyclerView = findViewById(R.id.trailersRecyclerView);
+        adapter = new TrailersAdapter();
 
     }
 

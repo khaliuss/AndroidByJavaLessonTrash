@@ -2,14 +2,12 @@ package com.example.movieapplication;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+public class TrailerResponse {
 
-public class TrailerRespons {
+    @SerializedName("videos")
+    private TrailerList trailerList;
 
-    @SerializedName("video")
-    TrailerList trailerList;
-
-    public TrailerRespons(TrailerList trailerList) {
+    public TrailerResponse(TrailerList trailerList) {
         this.trailerList = trailerList;
     }
 

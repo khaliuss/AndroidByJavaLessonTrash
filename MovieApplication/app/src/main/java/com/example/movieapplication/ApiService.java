@@ -7,7 +7,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
-
     String TOKEN ="X-API-KEY: 5RBED7A-V444WWE-QKBP08F-T8BA14K";
 
     @Headers(TOKEN)
@@ -18,6 +17,10 @@ public interface ApiService {
 
     @GET("movie/{id}?token=5RBED7A-V444WWE-QKBP08F-T8BA14K")
     Single<TrailerResponse> loadTrailers (@Path("id") int id);
+
+
+    @GET("review?token=5RBED7A-V444WWE-QKBP08F-T8BA14K&page=1&limit=10&selectFields=")
+    Single<ReviewResponse> loadReviews(@Query("movieId") int id);
 
 
 }

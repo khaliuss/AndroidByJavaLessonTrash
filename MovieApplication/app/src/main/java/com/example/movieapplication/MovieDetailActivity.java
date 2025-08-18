@@ -2,6 +2,7 @@ package com.example.movieapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -15,10 +16,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-
 public class MovieDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_MOVIE = "EXTRA_MOVIE";
@@ -27,7 +24,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView textViewYear;
     private TextView textViewDetails;
 
-    private RecyclerView recyclerView;
+    private RecyclerView trailerRecyclerView;
+
+    private RecyclerView reviewRecyclerView;
+    private ReviewAdapter reviewAdapter;
     private TrailersAdapter adapter;
 
     private  MovieDetailViewModel viewModel;
@@ -39,7 +39,17 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         init();
 
-        recyclerView.setAdapter(adapter);
+        reviewRecyclerView.setAdapter(reviewAdapter);
+
+        trailerRecyclerView.setAdapter(adapter);
+        adapter.setOnTrailerClickListener(new TrailersAdapter.OnTrailerClickListener() {
+            @Override
+            public void onClick(Trailer trailer) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(trailer.getUrl()));
+                    startActivity(intent);
+            }
+        });
 
         Movie movie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
 
@@ -62,6 +72,14 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
+        viewModel.loadReviews(movie.getId());
+        viewModel.getReviewsMLD().observe(this, new Observer<List<Review>>() {
+            @Override
+            public void onChanged(List<Review> reviews) {
+                reviewAdapter.setReviews(reviews);
+            }
+        });
+
     }
 
     private void init (){
@@ -70,8 +88,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         textViewYear = findViewById(R.id.textViewYear);
         textViewDetails = findViewById(R.id.textViewDetail);
         viewModel = new MovieDetailViewModel(getApplication());
-        recyclerView = findViewById(R.id.trailersRecyclerView);
+        trailerRecyclerView = findViewById(R.id.trailersRecyclerView);
         adapter = new TrailersAdapter();
+        reviewRecyclerView = findViewById(R.id.reviewRecyclerView);
+        reviewAdapter = new ReviewAdapter();
 
     }
 

@@ -2,13 +2,16 @@ package com.example.movieapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,10 +19,15 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_MOVIE = "EXTRA_MOVIE";
     private ImageView imageViewPoster;
+    private ImageView imageViewFavoriteIcon;
     private TextView textViewTitle;
     private TextView textViewYear;
     private TextView textViewDetails;
@@ -80,10 +88,46 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
+        Drawable starOff = ContextCompat.getDrawable(MovieDetailActivity.this, android.R.drawable.star_off);
+        Drawable starOn = ContextCompat.getDrawable(MovieDetailActivity.this, android.R.drawable.star_on);
+
+
+        viewModel.getFavoriteMovie(movie.getId()).observe(this, new Observer<Movie>() {
+            @Override
+            public void onChanged(Movie movieFromDb) {
+                if (movieFromDb == null){
+                    imageViewFavoriteIcon.setImageDrawable(starOff);
+                    imageViewFavoriteIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            viewModel.addMovie(movie);
+                        }
+                    });
+                }else{
+                    imageViewFavoriteIcon.setImageDrawable(starOn);
+                    imageViewFavoriteIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            viewModel.deleteMovie(movie.getId());
+                        }
+                    });
+                }
+            }
+        });
+
+        imageViewFavoriteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
     }
 
     private void init (){
         imageViewPoster = findViewById(R.id.imageViewPosterDetail);
+        imageViewFavoriteIcon = findViewById(R.id.imageViewFavoriteIcon);
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewYear = findViewById(R.id.textViewYear);
         textViewDetails = findViewById(R.id.textViewDetail);

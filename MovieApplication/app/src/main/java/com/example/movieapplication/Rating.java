@@ -9,8 +9,8 @@ public class Rating implements Serializable {
     @SerializedName("kp")
     private double ratingKp;
 
-    public Rating(double kp) {
-        this.ratingKp = kp;
+    public Rating(double ratingKp) {
+        this.ratingKp = ratingKp;
     }
 
     public double getRatingKp() {

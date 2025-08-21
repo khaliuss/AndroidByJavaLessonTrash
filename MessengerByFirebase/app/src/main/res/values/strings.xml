@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MessengerByFirebase</string>
+    <string name="your_email">Your email:</string>
+    <string name="reg_email">Email:</string>
+    <string name="register">Register</string>
+    <string name="registration">Registration</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last name</string>
+    <string name="how_old_are_you">How old are you?</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="messenger">Messenger</string>
+    <string name="log_out">Log out</string>
+</resources>

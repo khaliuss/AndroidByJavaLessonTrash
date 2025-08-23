@@ -1,46 +1,86 @@
 package com.example.messengerbyfirebase;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    private MainViewModel viewModel;
+    private UsersAdapter usersAdapter;
+    private RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            User user = new User("id: " + i,
+                    "Name " + i,
+                    "LastName " + i,
+                    new Random().nextInt(70), new Random().nextBoolean());
+            users.add(user);
+        }
 
+        usersAdapter.setUsers(users);
 
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        observeViewModel();
 
+    }
+
+    private void init() {
+        recyclerView = findViewById(R.id.recyclerView);
+        usersAdapter = new UsersAdapter();
+        recyclerView.setAdapter(usersAdapter);
+    }
+
+    public void observeViewModel() {
+        viewModel.getUser().observe(MainActivity.this, new Observer<FirebaseUser>() {
+            @Override
+            public void onChanged(FirebaseUser firebaseUser) {
+                if (firebaseUser == null) {
+                    Intent intent = LogInActivity.newIntent(MainActivity.this);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+    }
+
+    public static Intent newIntent(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.logOut) {
+            viewModel.signOut();
+        }
         return super.onOptionsItemSelected(item);
     }
 }

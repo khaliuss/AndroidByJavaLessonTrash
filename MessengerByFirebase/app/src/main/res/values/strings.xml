@@ -12,4 +12,5 @@
     <string name="sign_in">Sign in</string>
     <string name="messenger">Messenger</string>
     <string name="log_out">Log out</string>
+    <string name="link_was_send">Link was send</string>
 </resources>

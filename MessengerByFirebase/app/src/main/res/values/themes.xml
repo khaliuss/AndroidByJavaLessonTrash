@@ -3,6 +3,7 @@
     <style name="Base.Theme.MessengerByFirebase" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="Theme.MessengerByFirebase" parent="Base.Theme.MessengerByFirebase" />

@@ -13,6 +13,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,23 +30,17 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        List<User> users = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            User user = new User("id: " + i,
-                    "Name " + i,
-                    "LastName " + i,
-                    new Random().nextInt(70), new Random().nextBoolean());
-            users.add(user);
-        }
-
-        usersAdapter.setUsers(users);
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+
+
         observeViewModel();
 
     }
@@ -63,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        viewModel.getUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> users) {
+                usersAdapter.setUsers(users);
+            }
+        });
     }
 
     public static Intent newIntent(Context context) {
@@ -80,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.logOut) {
             viewModel.signOut();
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

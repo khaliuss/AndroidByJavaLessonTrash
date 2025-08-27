@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
 
+        usersAdapter.setOnUserClickListener(new UsersAdapter.OnUserClickListener() {
+            @Override
+            public void onUserClick(User user) {
+                Toast.makeText(MainActivity.this, "Clicked "+user.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         observeViewModel();
 
@@ -48,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         recyclerView = findViewById(R.id.recyclerView);
         usersAdapter = new UsersAdapter();
+
         recyclerView.setAdapter(usersAdapter);
     }
 

@@ -52,6 +52,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        viewModel.setUserOnline(true);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        viewModel.setUserOnline(false);
+    }
+
     private void init() {
         recyclerView = findViewById(R.id.recyclerViewMessage);
         usersAdapter = new UsersAdapter();
@@ -99,5 +114,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }

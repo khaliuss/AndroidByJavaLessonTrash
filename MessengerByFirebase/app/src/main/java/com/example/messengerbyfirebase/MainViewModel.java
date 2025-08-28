@@ -67,7 +67,14 @@ public class MainViewModel extends ViewModel {
 
     }
 
-
+    public void setUserOnline(boolean isOnline){
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser == null){
+            return;
+        }
+        myRef.child(firebaseUser.getUid()).child("online")
+                .setValue(isOnline);
+    }
 
 
     public LiveData<FirebaseUser> getUser() {
@@ -79,6 +86,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void signOut(){
+        setUserOnline(false);
         mAuth.signOut();
     }
 }

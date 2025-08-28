@@ -14,21 +14,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final  String EXTRA_CURRENT_USER_ID = "current_user_id";
+
 
     private MainViewModel viewModel;
     private UsersAdapter usersAdapter;
     private RecyclerView recyclerView;
+    private String currentUserId;
+
 
 
 
@@ -44,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         usersAdapter.setOnUserClickListener(new UsersAdapter.OnUserClickListener() {
             @Override
             public void onUserClick(User user) {
-                Toast.makeText(MainActivity.this, "Clicked "+user.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = ChatActivity.newIntent(MainActivity.this,currentUserId,user.getId());
+                startActivity(intent);
             }
         });
 
@@ -54,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerViewMessage);
         usersAdapter = new UsersAdapter();
-
         recyclerView.setAdapter(usersAdapter);
+        currentUserId = getIntent().getStringExtra(EXTRA_CURRENT_USER_ID);
     }
 
     public void observeViewModel() {
@@ -80,8 +79,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(Context context,String currentUserId) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(EXTRA_CURRENT_USER_ID,currentUserId);
         return intent;
     }
 

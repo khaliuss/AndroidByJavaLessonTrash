@@ -30,15 +30,16 @@
         android:background="@drawable/circle_green"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewChat"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTyping"
         app:layout_constraintTop_toBottomOf="@id/textViewTitle"
         tools:listitem="@layout/my_message_item" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editTextTyping"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,14 +48,15 @@
         android:padding="18dp" />
 
     <ImageView
+        android:id="@+id/imageViewSendMessage"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:src="@android:drawable/ic_menu_send"
         app:tint="#673AB7"
         android:inputType = "textMultiLine"
-        app:layout_constraintBottom_toBottomOf="@id/editText"
-        app:layout_constraintEnd_toEndOf="@id/editText"
-        app:layout_constraintTop_toTopOf="@id/editText"/>
+        app:layout_constraintBottom_toBottomOf="@id/editTextTyping"
+        app:layout_constraintEnd_toEndOf="@id/editTextTyping"
+        app:layout_constraintTop_toTopOf="@id/editTextTyping"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
